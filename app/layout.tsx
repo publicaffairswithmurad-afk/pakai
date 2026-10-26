@@ -1,44 +1,19 @@
-import { Analytics } from '@vercel/analytics/next'
-import type { Metadata, Viewport } from 'next'
-import { Anton, Geist } from 'next/font/google'
-import './globals.css'
-
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
-const anton = Anton({ subsets: ['latin'], weight: '400', variable: '--font-anton' })
-
-export const metadata: Metadata = {
-  title: "PAK'AI - Pakistan AI Video Maker | 620 Words Se 5 Min Video",
-  description:
-    'Apni kahani likho aur 20 minute me cinematic video ready. No stock footage, Urdu/Hindi/English voice, CapCut-style captions aur smart B-roll.',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
-  },
+"use client"
+import { useState } from "react"
+export default function Page(){
+const [story,setStory]=useState("")
+const [result,setResult]=useState("")
+const [loading,setLoading]=useState(false)
+const gen=async()=>{
+if(!story.trim()){alert("Kahani likho!");return}
+setLoading(true)
+setResult("⏳ PAK'AI SOCH RAHA HAI...")
+try{
+const r=await fetch("/api/groq",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:story})})
+const d=await r.json()
+setResult(d.script||"Ho gaya")
+}catch(e){setResult("Error: Groq Key check karo")}
+setLoading(false)
 }
-
-export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#000000',
-  width: 'device-width',
-  initialScale: 1,
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <html lang="en" className={`${geist.variable} ${anton.variable} bg-background`}>
-      <body className="antialiased">
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
-      </body>
-    </html>
-  )
+return(<div className="min-h-screen bg-black text-white p-4"><h1 className="text-2xl font-bold">PAK'AI</h1><textarea value={story} onChange={e=>setStory(e.target.value)} placeholder="Yahan likho... Hazrat Ali ka insaf" className="w-full h-40 bg-[#111] border border-green-500/30 rounded-2xl p-4 mt-6"/><button onClick={gen} disabled={loading} className="w-full mt-4 bg-[#00ff88] text-black font-black py-4 rounded-2xl">{loading?"SOCH RAHA...":"🔥 GENERATE CINEMATIC VIDEO"}</button>{result&&<div className="mt-4 p-4 bg-green-900/20 border border-green-500 rounded-xl whitespace-pre-wrap">{result}</div>}</div>)
 }
