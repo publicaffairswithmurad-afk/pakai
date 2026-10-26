@@ -11,6 +11,12 @@ export function Navbar() {
         <Logo />
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
+            href="/pricing"
+            className="px-2 py-2 text-sm font-semibold text-white/70 transition-colors hover:text-white sm:px-3"
+          >
+            Pricing
+          </Link>
+          <Link
             href="/dashboard"
             className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-white/85 sm:px-5"
           >
