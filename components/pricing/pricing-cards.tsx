@@ -1,11 +1,13 @@
-import Link from 'next/link'
 import { Check, Crown } from 'lucide-react'
+
+export const WHATSAPP_NUMBER = '923249931995'
 
 type Plan = {
   id: string
   name: string
   price: string
   features: string[]
+  whatsappMessage: string
   popular?: boolean
 }
 
@@ -14,6 +16,7 @@ const plans: Plan[] = [
     id: 'standard',
     name: 'Standard Plan',
     price: '10,000',
+    whatsappMessage: 'Salam Raja Murad Waheed, Mujhe STANDARD PLAN Rs 10000 chahiye, 60 Videos wala',
     features: [
       '60 Videos per month (20 min each)',
       'Urdu / Hindi / English AI Voice',
@@ -27,6 +30,7 @@ const plans: Plan[] = [
     id: 'premium',
     name: 'Premium Unlimited',
     price: '18,000',
+    whatsappMessage: 'Salam Raja Murad Waheed, Mujhe PREMIUM UNLIMITED Rs 18000 chahiye',
     popular: true,
     features: [
       'Unlimited Videos - No Limit',
@@ -93,13 +97,15 @@ function PlanCard({ plan }: { plan: Plan }) {
         ))}
       </ul>
 
-      <Link
-        href={`/login?plan=${plan.id}`}
-        aria-label={`Buy ${plan.name}`}
-        className="inline-flex h-14 items-center justify-center rounded-2xl bg-[#00ff88] text-base font-black uppercase tracking-wider text-black shadow-[0_0_30px_rgba(0,255,136,0.45)] transition-all hover:shadow-[0_0_45px_rgba(0,255,136,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff88] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(plan.whatsappMessage)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Buy ${plan.name} on WhatsApp`}
+        className="inline-flex h-14 cursor-pointer items-center justify-center rounded-2xl bg-[#00ff88] text-base font-black uppercase tracking-wider text-black shadow-[0_0_30px_rgba(0,255,136,0.45)] transition-all hover:scale-[1.02] hover:shadow-[0_0_55px_rgba(0,255,136,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00ff88] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       >
         Buy Now
-      </Link>
+      </a>
     </article>
   )
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { PricingCards } from '@/components/pricing/pricing-cards'
+import { PaymentBox } from '@/components/pricing/payment-box'
 
 export const metadata: Metadata = {
   title: "Pricing | PAK'AI Plans - Choose Your Empire",
@@ -34,6 +35,7 @@ export default function PricingPage() {
             </p>
           </header>
           <PricingCards />
+          <PaymentBox />
         </section>
       </main>
       <Footer />
