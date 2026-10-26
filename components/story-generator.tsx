@@ -7,7 +7,7 @@ export default function StoryGenerator() {
   const [loading, setLoading] = useState(false)
 
   const handleGenerate = async () => {
-    if (!story) return
+    if (story.trim() === "") return
     setLoading(true)
     setResult("⏳ PAK'AI SOCH RAHA HAI...")
 
@@ -18,7 +18,7 @@ export default function StoryGenerator() {
         body: JSON.stringify({ prompt: story }),
       })
       const data = await res.json()
-      setResult(data.script || "✅ HO GAYA!")
+      setResult(data.script)
     } catch (e) {
       setResult("❌ Error - Dobara try karo")
     }
@@ -29,7 +29,7 @@ export default function StoryGenerator() {
     <div className="w-full">
       <textarea
         value={story}
-        onChange={(e) => setStory(e.target.value)}
+        onChange={(e: any) => setStory(e.target.value)}
         placeholder="Yahan apni kahani likho... Ex: Hazrat Umar raat ko Madine me..."
         className="w-full h-32 bg-black/50 border border-green-500/30 rounded-xl p-4 text-white"
       />
