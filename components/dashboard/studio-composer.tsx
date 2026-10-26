@@ -1,119 +1,106 @@
 'use client'
 
 import { useState } from 'react'
+import { Sparkles } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-const TARGET_WORDS = 620
+const MAX_WORDS = 620
 const LANGUAGES = ['Urdu', 'Hindi', 'English'] as const
 type Language = (typeof LANGUAGES)[number]
 
+function countWords(text: string) {
+  const trimmed = text.trim()
+  return trimmed ? trimmed.split(/\s+/).length : 0
+}
+
 export function StudioComposer() {
-  const [story, setStory] = useState('')
+  const [script, setScript] = useState('')
   const [language, setLanguage] = useState<Language>('Urdu')
-  const [status, setStatus] = useState('')
 
-  const wordCount = story.trim() ? story.trim().split(/\s+/).length : 0
-  const progress = Math.min(100, (wordCount / TARGET_WORDS) * 100)
-  const reached = wordCount >= TARGET_WORDS
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setStatus(
-      wordCount
-        ? `${language} video queue me add ho gayi! ~20 min me ready hogi.`
-        : 'Pehle apni kahani likho.',
-    )
-  }
+  const words = countWords(script)
+  const overLimit = words > MAX_WORDS
+  const progress = Math.min((words / MAX_WORDS) * 100, 100)
 
   return (
-    <section aria-labelledby="studio-heading">
-      <h1
-        id="studio-heading"
-        className="font-display text-4xl tracking-wide text-white uppercase sm:text-6xl"
-      >
-        AI VIDEO <span className="text-brand">STUDIO</span>
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-        620 words likho, 5 minute ki cinematic video pao.
-      </p>
+    <section aria-labelledby="studio-title" className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <p className="text-xs font-semibold tracking-[0.25em] text-brand uppercase">Create</p>
+        <h1 id="studio-title" className="text-balance text-4xl font-black tracking-tight sm:text-5xl">
+          AI VIDEO STUDIO
+        </h1>
+      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="mt-6 rounded-2xl border border-white/10 bg-[#0d0d0d] p-3 shadow-[0_0_80px_-20px] shadow-brand/30 sm:p-4"
-      >
-        <label htmlFor="studio-story" className="sr-only">
-          Apni kahani likho
-        </label>
-        <textarea
-          id="studio-story"
-          rows={8}
-          value={story}
-          onChange={(e) => {
-            setStory(e.target.value)
-            setStatus('')
-          }}
-          placeholder="Yahan apni kahani likho... Ex: Hazrat Umar raat ko Madine ki galiyon me..."
-          className="w-full resize-none rounded-xl border border-white/5 bg-black p-4 text-base leading-relaxed text-white placeholder:text-white/35 focus:border-brand/50 focus:outline-none sm:text-lg"
-        />
-
-        <div className="mt-3 flex items-center gap-3 px-1">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]">
+        <div className="h-1 bg-white/5">
           <div
-            className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10"
-            role="progressbar"
-            aria-label="Word count progress"
-            aria-valuemin={0}
-            aria-valuemax={TARGET_WORDS}
-            aria-valuenow={Math.min(wordCount, TARGET_WORDS)}
-          >
-            <div
-              className="h-full rounded-full bg-brand transition-[width] duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <span
-            aria-live="polite"
-            className={`shrink-0 text-sm font-semibold tabular-nums ${reached ? 'text-brand' : 'text-muted-foreground'}`}
-          >
-            {wordCount} / {TARGET_WORDS} words
-          </span>
+            className={cn('h-full transition-all', overLimit ? 'bg-red-500' : 'bg-brand')}
+            style={{ width: `${progress}%` }}
+          />
         </div>
 
-        <fieldset className="mt-5 px-1">
-          <legend className="mb-2 text-xs font-semibold tracking-widest text-muted-foreground uppercase">
-            Voice Language
-          </legend>
-          <div className="grid grid-cols-3 gap-2">
-            {LANGUAGES.map((lang) => {
-              const active = lang === language
-              return (
+        <div className="flex flex-col gap-5 p-4 sm:p-6">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <label htmlFor="script" className="text-sm font-semibold text-white/80">
+                Apni Kahani Likho
+              </label>
+              <span
+                aria-live="polite"
+                className={cn(
+                  'rounded-md px-2 py-0.5 font-mono text-sm tabular-nums',
+                  overLimit ? 'bg-red-500/15 text-red-400' : 'bg-brand/10 text-brand',
+                )}
+              >
+                {words}/{MAX_WORDS}
+              </span>
+            </div>
+            <textarea
+              id="script"
+              value={script}
+              onChange={(e) => setScript(e.target.value)}
+              rows={8}
+              placeholder="Ek dafa ka zikr hai..."
+              className="w-full resize-y rounded-xl border border-white/10 bg-black p-4 text-base leading-relaxed text-white placeholder:text-white/30 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
+            />
+            {overLimit && (
+              <p className="text-sm text-red-400">Max {MAX_WORDS} words allowed. Thora chhota karo.</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span id="lang-label" className="text-sm font-semibold text-white/80">
+              Language
+            </span>
+            <div role="group" aria-labelledby="lang-label" className="grid grid-cols-3 gap-2 sm:max-w-md">
+              {LANGUAGES.map((lang) => (
                 <button
                   key={lang}
                   type="button"
-                  aria-pressed={active}
+                  aria-pressed={language === lang}
                   onClick={() => setLanguage(lang)}
-                  className={`rounded-xl border px-3 py-3 text-sm font-bold transition-colors sm:text-base ${
-                    active
-                      ? 'border-brand bg-brand/10 text-brand'
-                      : 'border-white/10 bg-black text-white/70 hover:border-white/30 hover:text-white'
-                  }`}
+                  className={cn(
+                    'rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors',
+                    language === lang
+                      ? 'border-brand bg-brand text-black'
+                      : 'border-white/15 text-white/70 hover:border-brand/50 hover:text-white',
+                  )}
                 >
                   {lang}
                 </button>
-              )
-            })}
+              ))}
+            </div>
           </div>
-        </fieldset>
 
-        <button
-          type="submit"
-          className="mt-5 w-full rounded-xl bg-brand px-6 py-5 text-base font-extrabold tracking-wide text-black uppercase transition-all hover:brightness-110 hover:shadow-[0_0_40px_-8px] hover:shadow-brand active:scale-[0.99] sm:text-xl"
-        >
-          GENERATE CINEMATIC VIDEO
-        </button>
-
-        <p aria-live="polite" className="mt-3 min-h-5 px-1 text-center text-sm text-brand">
-          {status}
-        </p>
-      </form>
+          <button
+            type="button"
+            disabled={words === 0 || overLimit}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-4 text-base font-black tracking-wide text-black shadow-[0_0_30px_-6px_var(--brand)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none sm:text-lg"
+          >
+            <Sparkles className="size-5" aria-hidden="true" />
+            GENERATE CINEMATIC VIDEO
+          </button>
+        </div>
+      </div>
     </section>
   )
 }

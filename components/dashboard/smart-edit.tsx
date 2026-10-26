@@ -5,58 +5,37 @@ import { Wand2 } from 'lucide-react'
 
 export function SmartEdit() {
   const [instruction, setInstruction] = useState('')
-  const [status, setStatus] = useState('')
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const value = instruction.trim()
-    if (!value) {
-      setStatus('Pehle likho kya change karna hai.')
-      return
-    }
-    setStatus(`"${value}" — AI edit apply kar raha hai...`)
-    setInstruction('')
-  }
 
   return (
-    <section
-      aria-labelledby="smart-edit-heading"
-      className="rounded-2xl border border-white/10 bg-[#0d0d0d] p-5 sm:p-6"
+    <form
+      aria-labelledby="smart-edit-title"
+      onSubmit={(e) => e.preventDefault()}
+      className="flex flex-col gap-3 rounded-2xl border border-brand/20 bg-[#0a0a0a] p-5 sm:p-6"
     >
-      <div className="flex items-center gap-3">
-        <div className="flex size-11 items-center justify-center rounded-xl bg-brand/10 text-brand">
-          <Wand2 className="size-5" aria-hidden="true" />
-        </div>
-        <h2 id="smart-edit-heading" className="text-xl font-black text-white sm:text-2xl">
-          Smart Edit
-        </h2>
-      </div>
-
-      <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <label htmlFor="smart-edit-input" className="sr-only">
-          Kya Change Karna Hai Likho?
-        </label>
+      <h2 id="smart-edit-title" className="flex items-center gap-2 text-lg font-bold sm:text-xl">
+        <Wand2 className="size-5 text-brand" aria-hidden="true" />
+        Smart Edit
+      </h2>
+      <label htmlFor="smart-edit" className="text-sm text-white/60">
+        Kya Change Karna Hai?
+      </label>
+      <div className="flex flex-col gap-2 sm:flex-row">
         <input
-          id="smart-edit-input"
+          id="smart-edit"
           type="text"
           value={instruction}
-          onChange={(e) => {
-            setInstruction(e.target.value)
-            setStatus('')
-          }}
-          placeholder="Kya Change Karna Hai Likho? Ex: Background hata do"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-4 py-3.5 text-base text-white placeholder:text-white/35 focus:border-brand/50 focus:outline-none"
+          onChange={(e) => setInstruction(e.target.value)}
+          placeholder="Ex: Background hata do"
+          className="flex-1 rounded-xl border border-white/10 bg-black px-4 py-3 text-base text-white placeholder:text-white/30 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30"
         />
         <button
           type="submit"
-          className="rounded-xl bg-brand px-6 py-3.5 font-extrabold text-black transition-all hover:brightness-110"
+          disabled={!instruction.trim()}
+          className="rounded-xl bg-brand px-6 py-3 font-bold text-black transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Apply Edit
+          Apply
         </button>
-      </form>
-      <p aria-live="polite" className="mt-3 min-h-5 text-sm text-brand">
-        {status}
-      </p>
-    </section>
+      </div>
+    </form>
   )
 }

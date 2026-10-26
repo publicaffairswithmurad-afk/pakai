@@ -1,25 +1,29 @@
 import Link from 'next/link'
-import { Logo } from '@/components/logo'
+import { ArrowLeft } from 'lucide-react'
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-black/70 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-brand/15 bg-black/80 backdrop-blur-md">
       <nav
         aria-label="Dashboard"
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6"
       >
-        <Logo />
-        <div className="flex items-center gap-3">
-          <span className="hidden rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-semibold text-brand sm:inline">
-            3 Free Credits
+        <p className="flex items-center gap-2 text-base font-black tracking-tight sm:text-lg">
+          <span className="size-2 rounded-full bg-brand shadow-[0_0_12px_var(--brand)]" aria-hidden="true" />
+          <span>
+            PAK<span className="text-brand">{"'"}AI</span>
           </span>
-          <Link
-            href="/"
-            className="rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/5"
-          >
-            Home
-          </Link>
-        </div>
+          <span className="font-medium text-white/50">Dashboard</span>
+        </p>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-brand hover:text-brand"
+        >
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          <span>
+            Back<span className="hidden sm:inline"> to Home</span>
+          </span>
+        </Link>
       </nav>
     </header>
   )

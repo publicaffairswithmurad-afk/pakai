@@ -11,13 +11,13 @@ export function Navbar() {
         <Logo />
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="#generate"
+            href="/dashboard"
             className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-white/85 sm:px-5"
           >
             Free Try
           </Link>
           <Link
-            href="#login"
+            href="/login"
             className="rounded-full border border-white/25 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/5 sm:px-5"
           >
             Login
